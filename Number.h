@@ -11,23 +11,23 @@ eg: string s = "1234567890";
     if BASE = 3;
         => v={890, 567, 234, 1};
 **/
-const int BASE = 6; // 10^BASE
+const int BASE = 9; // 10^BASE
 
 class Number{
 
 private:
 
-    vector< int > v;
+    vector< long long int > v;
 
-    int toInt(string s){
+    long long int toInt(string s){
         stringstream ss;
         ss << s;
-        int r;
+        long long int r;
         ss >> r;
         return r;
     }
 
-    string toString(long x){ //chuyển từ số nguyên sang kiểu string
+    string toString(long long int x){ //chuyển từ số nguyên sang kiểu string
         stringstream ss;
         ss<<x;
         string res;
@@ -43,6 +43,7 @@ private:
 public:
 
     Number(){
+        v.push_back(0);
     }
 
     Number(string s){
@@ -93,10 +94,10 @@ public:
 
     Number add(Number n){
         // câm bằng băng cách resize sẽ tạo thêm nhưng phần tử mới = 0
-        vector< int > t = v; //copy
+        vector< long long int > t = v; //copy
         if(size() > n.size()) n.v.resize(size());
         else t.resize(n.size());
-        int base = pow(10,BASE),flat = 0;
+        long long int base = pow(10,BASE),flat = 0;
         //cout<<base<<endl;
         for(int i=0;i<n.size();i++){
             n.v[i]= n.v[i] + t[i] + flat;
@@ -114,7 +115,7 @@ public:
 
     Number sub(Number n){ // mặc định là lớn trừ bé
         n.v.resize(size());
-        int base = pow(10,BASE),flat = 0;
+        long long int base = pow(10,BASE),flat = 0;
         for(int i=0;i<n.size();i++){
             n.v[i]= v[i] - n.v[i] - flat;
             flat = 0;
@@ -128,10 +129,13 @@ public:
     }
 
     Number mul(int n){
+        if(n==0) return Number();
         Number t;
         t.v= v;
-        int base = pow(10,BASE),flat = 0;
+        long long int base = pow(10,BASE),flat = 0;
+        //cout<<t.size()<<endl;
         for(int i=0;i<t.size();i++){
+            //cout<<i<<endl;
             t.v[i]= t.v[i]*n + flat;
             flat = 0;
             if(t.v[i]>= base){
@@ -139,13 +143,14 @@ public:
                 t.v[i]= t.v[i] % base;
             }
         }
+        //t.printf();
         if(flat > 0) t.v.push_back(flat);
         //n.printf();
         //cout<<endl<<n.getStr()<<endl;
         return t;
     }
-    int divBase(){ // chia cho base trả về số dư
-        int r = v[0];
+    long long int divBase(){ // chia cho base trả về số dư
+        long long int r = v[0];
         if(v.size()==1) v[0] = 0;
         else v.erase(v.begin());
         return r;
@@ -157,10 +162,16 @@ public:
     Number mul (Number n){
         // a,b cùng hệ base => a*b = base * a * (b/base) + a*(b%base)
         if(n.size() == 1) return mul(n.v[0]);
-        int d = n.divBase(); // n /= BASE;
+        long long int d = n.divBase(); // n /= BASE;
+        //cout<<"d: "<<d<<endl;
         Number r = mul(n);
+        //cout<<"r: "<<r.getStr()<<endl;
         r.mulBASE();
+        //cout<<"r: "<<r.getStr()<<endl;
+        //cout<<d<<endl;
+        //cout<<mul(d).getStr()<<endl;
         r = r.add(mul(d));
+        //cout<<"r: "<<r.getStr()<<endl;
         return r;
     }
 };

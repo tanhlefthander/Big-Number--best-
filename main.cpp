@@ -22,7 +22,7 @@ int main(){
     B = x.mul(y).getStr();
     finish = clock();
     double durY = (double)(finish - start) / CLOCKS_PER_SEC;
-    cout<<A<<endl<<B<<endl;
+    cout<<A<<endl<<B<<endl<<endl;
     if( A == B ) cout<<"Giong nhau"<<endl;
     else  cout<<"Khong giong nhau"<<endl;
     cout<<endl<<durX<<" "<<durY<<endl;
